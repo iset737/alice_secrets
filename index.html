@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Для моей любимой 💕</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 30%, #fad0c4 70%, #a1c4fd 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Плавающие сердечки на фоне */
+    .hearts-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.7;
+      color: #ff6b9d;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.7; }
+      100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+    }
+
+    .container {
+      z-index: 10;
+      max-width: 400px;
+      width: 100%;
+      padding: 25px 20px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      line-height: 1.3;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      opacity: 0.95;
+      line-height: 1.4;
+    }
+
+    .love-btn {
+      background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.45);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: pulse 2s infinite;
+    }
+
+    .love-btn:hover,
+    .love-btn:active {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+    }
+
+    .love-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .love-btn:active::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 107, 157, 0.6); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 107, 157, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 107, 157, 0); }
+    }
+
+    /* Модальное окно */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: linear-gradient(145deg, #fff5f7, #ffeef2);
+      border-radius: 22px;
+      padding: 25px 20px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      color: #5a3945;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+      border: 2px solid #ffb6c1;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #d6336c;
+    }
+
+    .modal-text {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #6b4455;
+    }
+
+    .code-box {
+      background: #fff;
+      border: 2px dashed #ff8fa3;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 15px 0;
+      font-family: monospace;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #d6336c;
+      letter-spacing: 3px;
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 5px rgba(255, 143, 163, 0.5); }
+      to { box-shadow: 0 0 15px rgba(255, 143, 163, 0.9); }
+    }
+
+    .bot-link {
+      display: inline-block;
+      margin-top: 10px;
+      color: #0088cc;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: color 0.2s;
+    }
+
+    .bot-link:hover {
+      color: #006699;
+      text-decoration: underline;
+    }
+
+    .close-btn {
+      margin-top: 15px;
+      background: #ff8fa3;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: #ff6b9d;
+      transform: scale(1.03);
+    }
+
+    .footer-love {
+      margin-top: 25px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+      font-style: italic;
+    }
+
+    .big-heart {
+      font-size: 2.5rem;
+      margin: 10px 0;
+      animation: heartbeat 1.3s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.15); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.15); }
+      70% { transform: scale(1); }
+    }
+
+    /* Адаптив для очень маленьких экранов */
+    @media (max-width: 360px) {
+      h1 { font-size: 1.6rem; }
+      .subtitle { font-size: 1rem; }
+      .love-btn { padding: 14px 30px; font-size: 1.2rem; }
+      .modal { padding: 20px 15px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Плавающие сердечки -->
+  <div class="hearts-bg" id="heartsBg"></div>
+
+  <div class="container">
+    <div class="big-heart">💖</div>
+    <h1>Я тебя люблю ❤️</h1>
+    <p class="subtitle">За это нажми кнопку ниже...<br>Там ждёт что-то особенное ✨</p>
+    
+    <button class="love-btn" id="loveBtn">почух 🌸</button>
+    
+    <p class="footer-love">Поправляйся скорее, моя хорошая...<br>Я рядом 💕</p>
+  </div>
+
+  <!-- Модальное окно -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-title">🎁 Секрет для тебя!</div>
+      <p class="modal-text">
+        За это секрет и история...<br>
+        Напиши секретный код в бота:
+      </p>
+      
+      <div class="code-box">7386</div>
+      
+      <p class="modal-text">
+        👉 <a href="https://t.me/example" class="bot-link" target="_blank">t.me/example</a><br><br>
+        <small>🗓️ Новый код будет завтра</small>
+      </p>
+      
+      <button class="close-btn" id="closeModal">Поняла, спасибо! 💕</button>
+    </div>
+  </div>
+
+  <script>
+    // Создаём плавающие сердечки на фоне
+    function createHearts() {
+      const container = document.getElementById('heartsBg');
+      const hearts = ['💕', '💖', '💗', '💓', '💘', '✨', '🌸'];
+      
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDelay = Math.random() * 6 + 's';
+        heart.style.fontSize = (15 + Math.random() * 20) + 'px';
+        container.appendChild(heart);
+      }
+    }
+
+    // Открытие модального окна
+    document.getElementById('loveBtn').addEventListener('click', function() {
+      document.getElementById('modal').classList.add('active');
+      
+      // Маленькая анимация "подарка" при открытии
+      const modal = document.querySelector('.modal');
+      modal.style.animation = 'none';
+      setTimeout(() => {
+        modal.style.animation = 'fadeInUp 0.4s ease-out';
+      }, 10);
+    });
+
+    // Закрытие модального окна
+    document.getElementById('closeModal').addEventListener('click', function() {
+      document.getElementById('modal').classList.remove('active');
+      
+      // Эффект конфетти при закрытии (упрощённый)
+      createMiniConfetti();
+    });
+
+    // Закрытие по клику вне модального окна
+    document.getElementById('modal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('active');
+      }
+    });
+
+    // Мини-конфетти для радости 💫
+    function createMiniConfetti() {
+      const colors = ['#ff6b9d', '#ff8fa3', '#ffb6c1', '#ffd93d', '#a1c4fd'];
+      for (let i = 0; i < 20; i++) {
+        const conf = document.createElement('div');
+        conf.textContent = ['✨', '💫', '🌟', '💖'][Math.floor(Math.random() * 4)];
+        conf.style.cssText = `
+          position: fixed;
+          font-size: ${15 + Math.random() * 15}px;
+          left: ${Math.random() * 100}vw;
+          top: 50%;
+          pointer-events: none;
+          z-index: 200;
+          animation: confettiFall ${1 + Math.random() * 2}s ease-out forwards;
+        `;
+        document.body.appendChild(conf);
+        
+        setTimeout(() => conf.remove(), 3000);
+      }
+      
+      // Добавляем анимацию конфетти в стиль динамически
+      if (!document.getElementById('confettiStyle')) {
+        const style = document.createElement('style');
+        style.id = 'confettiStyle';
+        style.textContent = `
+          @keyframes confettiFall {
+            to {
+              transform: translateY(150vh) rotate(720deg);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', function() {
+      createHearts();
+      
+      // Небольшая задержка для плавного появления
+      setTimeout(() => {
+        document.querySelector('.container').style.opacity = '1';
+      }, 100);
+    });
+  </script>
+</body>
+</html>
